@@ -12,7 +12,6 @@ function getInstructions(recipe_id) {
     )
 }
 
-
 module.exports = {
     getInstructions,
 }
