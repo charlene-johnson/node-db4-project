@@ -1,5 +1,6 @@
 const express = require("express")
 const Recipe = require("../models/recipes")
+const Instructions = require("../models/instructions")
 const router = express.Router()
 
 
@@ -40,5 +41,18 @@ router.get("/:id", async (req, res, next) => {
     }
  })
 
+ router.get("/:id/instructions", async (req, res, next) => {
+    try {
+         const instructions = await Instructions.getInstructions(req.params.id)
+         if(!instructions) {
+             return res.status(404).json({
+                 message: "Cannot find a instructions with this ID"
+             })
+         }
+         res.json(instructions)
+    } catch(err) {
+        next(err)
+    }
+ })
 
 module.exports = router
