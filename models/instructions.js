@@ -10,6 +10,7 @@ function getInstructions(recipe_id) {
         "i.stepNumber as Step Number",
         "i.instructions"
     )
+    .orderBy("i.stepNumber")
 }
 
 module.exports = {
