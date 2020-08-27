@@ -3,30 +3,42 @@ const Recipe = require("../models/recipes")
 const router = express.Router()
 
 
-router.get("/", (req, res) => {
-    Recipe.getRecipes()
-    .then(recipes => {
+router.get("/", async (req, res, next) => {
+    try {
+        const recipes = await Recipe.getRecipes()
         res.json(recipes)
-    })
-    .catch(err => {
-        res.status(500).json({message: "Failed to get recipes"})
-    })
+    } catch(err) {
+        next(err)
+    }
 })
 
-router.get("/:id", (req, res) => {
-    const {id} = req.params
-
-    Recipe.getRecipeById(id)
-    .then(recipe => {
-        if(recipe) {
-            res.json(recipe)
-        } else {
-            res.status(404).json({message: "Cannot find recipe with this ID"})
+router.get("/:id", async (req, res, next) => {
+    try {
+        const recipe = await Recipe.getRecipeById(req.params.id)
+        if(!recipe) {
+            return res.status(404).json({
+                message: "Cannot find a recipe with this ID"
+            })
         }
-    })
-    .catch(err => {
-        res.status(500).json({message: "Failed to get recipe"})
-    })
-})
+        res.json(recipe)
+    } catch(err) {
+        next(err)
+    }
+ })
+
+ router.get("/:id/shoppingList", async (req, res, next) => {
+    try {
+         const ingredients = await Recipe.getShoppingList(req.params.id)
+         if(!ingredients) {
+             return res.status(404).json({
+                 message: "Cannot find a recipe with this ID"
+             })
+         }
+         res.json(ingredients)
+    } catch(err) {
+        next(err)
+    }
+ })
+
 
 module.exports = router

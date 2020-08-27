@@ -12,5 +12,5 @@ function getIngredientsById(id) {
 
 module.exports = {
     getIngredients,
-    getIngredientsById
+    getIngredientsById,
 }
